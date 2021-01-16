@@ -4,7 +4,7 @@ workflows:
   devopsTP4:
     jobs:
       - install
-
+      - back-deploy-heroku
 jobs:
   install:
     docker:
@@ -56,3 +56,19 @@ jobs:
       - run: docker container stop flask_db_test
       - run: docker container rm flask_db_test
       - run: unset DATABASE_URL
+  back-deploy-heroku:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - checkout
+      - run:
+          name: Heroku Deploy
+          command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:main
+      - run:
+          name: Smoke Test
+          command: |
+            HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://devops-back-final.herokuapp.com//`
+            if [[ "$HTTPCODE" -ne 200 ]]; then
+              echo "heroku app not responding, failing deploy" \
+              exit 1; \
+            fi
