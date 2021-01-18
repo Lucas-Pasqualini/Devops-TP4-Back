@@ -29,7 +29,7 @@ class Config(object):
         'http://localhost:5432',
         'http://0.0.0.0:' + os.environ.get('PORT', '8080'),
         'https://0.0.0.0:' + os.environ.get('PORT', '8080'),
-        'https://devops-tp-final-front.netlify.app/',
+        'https://devops-tp-final-front.netlify.app',
     ]
     JWT_HEADER_TYPE = 'Token'
 
